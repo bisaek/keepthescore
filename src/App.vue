@@ -1,17 +1,21 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
   <ul>
     <li v-for="player in players" :key="player" class="m-4 relative">
       {{ player.name }}:
       <input type="number" v-model="player.score" class="bg-gray-800" />
       <button v-on:click="removePlayer(player.id)">remove</button>
       <div class="inset-y-0 right-0 absolute">
-        <input v-model="player.newScore" type="number" class="text-black" />
+        <button v-for="changedNumber in scoreChangedButtons" :key="changedNumber" 
+        v-on:click="changeScore(player, -changedNumber)" class="bg-black ml-4 px-2">
+          -{{changedNumber}}
+        </button>
+        <input v-model="player.newScore" type="number" class="text-black ml-4" />
         <button v-on:click="changeScore(player)" class="bg-black ml-4 px-2">
           change score
         </button>
-        <button v-on:click="changeScore(player, 10)" class="bg-black ml-4 px-2">
-          +10
+        <button v-for="changedNumber in scoreChangedButtons" :key="changedNumber" 
+        v-on:click="changeScore(player, changedNumber)" class="bg-black ml-4 px-2">
+          +{{changedNumber}}
         </button>
       </div>
     </li>
@@ -55,6 +59,8 @@
 </template>
 
 <script>
+import './assets/tailwind.css'
+
 export default {
   name: "App",
   data() {
@@ -65,6 +71,7 @@ export default {
       saveName: "",
       seeSaves: false,
       saves: {},
+      scoreChangedButtons: [1, 3, 5, 10, 50]
     };
   },
   methods: {
@@ -117,6 +124,7 @@ export default {
     },
   },
   mounted: function () {
+    document.body.classList.add("bg-gray-800", "text-white")
     let saves = JSON.parse(localStorage.getItem("keepTheScore"));
     if (saves != null) this.saves = Object.keys(saves);
   },
@@ -124,5 +132,4 @@ export default {
 </script>
 
 <style>
-@import "https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css";
 </style>
